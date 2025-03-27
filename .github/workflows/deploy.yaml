@@ -1,7 +1,9 @@
 name: Deploy Node.js App
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - master
 
 jobs:
   build:
@@ -36,7 +38,10 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            docker pull iqbalsha22/dockerized-image:latest
             docker stop my-container || true
             docker rm my-container || true
-            docker run -d --name my-container -p 3000:3000 iqbalsha22/dockerized-image:latest
+            docker run -d --name my-container -p 3000:3000 \
+        -e USERNAME=${{ secrets.DOCKERIZEDSERVICEENV_USERNAME }} \
+        -e PASSWORD=${{ secrets.DOCKERIZEDSERVICEENV_PASSWORD }} \
+        -e SECRET_MESSAGE=${{ secrets.DOCKERIZEDSERVICEENV_SECRET_MESSAGE }} \
+        iqbalsha22/dockerized-image:latest
