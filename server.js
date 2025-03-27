@@ -21,7 +21,7 @@ const auth = basicAuth({
 
 // Public route
 app.get('/', (req, res) => {
-    res.send('Hello, world!');
+    res.send('Hello, user its a punlic route and you can see the secret message by /secret on the secret route');
 });
 
 // Protected route with Basic Auth
