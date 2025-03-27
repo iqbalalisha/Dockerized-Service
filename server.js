@@ -28,7 +28,7 @@ app.get('/', (req, res) => {
           <title>Public Route</title>
       </head>
       <body>
-          <h1>Hello, user! This is a public route.</h1>
+          <h1>Hello, user!! This is a public route.</h1>
           <p>You can see the secret message by clicking the button below.</p>
           <button onclick="window.location.href='/secret'">Go to Secret</button>
       </body>
