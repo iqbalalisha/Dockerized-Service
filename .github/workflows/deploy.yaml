@@ -15,10 +15,14 @@ jobs:
         run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u iqbalsha22 --password-stdin
 
       - name: Build Docker image
-        run: docker build -t iqbalsha22/dockerized-image:${{ github.sha }} .
+        run: |
+          docker build -t iqbalsha22/dockerized-image:${{ github.sha }} .
+          docker tag iqbalsha22/dockerized-image:${{ github.sha }} iqbalsha22/dockerized-image:latest
 
       - name: Push Docker image
-        run: docker push iqbalsha22/dockerized-image:${{ github.sha }}
+        run: |
+          docker push iqbalsha22/dockerized-image:${{ github.sha }}
+          docker push iqbalsha22/dockerized-image:latest
 
   deploy:
     needs: build
@@ -29,10 +33,10 @@ jobs:
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.ubuntu }}
+          username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            docker pull iqbalsha22/dockerized-image:${{ github.sha }}
+            docker pull iqbalsha22/dockerized-image:latest
             docker stop my-container || true
             docker rm my-container || true
-            docker run -d --name my-container -p 3000:3000 iqbalsha22/dockerized-image:${{ github.sha }}
+            docker run -d --name my-container -p 3000:3000 iqbalsha22/dockerized-image:latest
