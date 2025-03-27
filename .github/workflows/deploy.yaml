@@ -38,11 +38,25 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            echo "Stopping existing container if running..."
             docker stop my-container || true
             docker rm my-container || true
+            
+            echo "Pulling new image..."
             docker pull iqbalsha22/dockerized-image:latest
+
+            echo "Checking available Docker images..."
+            docker images
+            
+            echo "Checking running containers..."
+            docker ps -a
+
+            echo "Running new container..."
             docker run -d --name my-container -p 3000:3000 \
-              -e USERNAME=${{ secrets.DOCKERIZEDSERVICEENV_USERNAME }} \
-              -e PASSWORD=${{ secrets.DOCKERIZEDSERVICEENV_PASSWORD }} \
-              -e SECRET_MESSAGE=${{ secrets.DOCKERIZEDSERVICEENV_SECRET_MESSAGE }} \
+              --env USERNAME=${{ secrets.DOCKERIZEDSERVICEENV_USERNAME }} \
+              --env PASSWORD=${{ secrets.DOCKERIZEDSERVICEENV_PASSWORD }} \
+              --env SECRET_MESSAGE=${{ secrets.DOCKERIZEDSERVICEENV_SECRET_MESSAGE }} \
               iqbalsha22/dockerized-image:latest
+
+            echo "Verifying container status..."
+            docker ps -a
