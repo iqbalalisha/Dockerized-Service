@@ -27,7 +27,7 @@ jobs:
           docker push iqbalsha22/dockerized-image:latest
 
   deploy:
-    needs: build
+    needs: build   
     runs-on: ubuntu-latest
 
     steps:
@@ -51,11 +51,16 @@ jobs:
             echo "Checking running containers..."
             docker ps -a
 
+            echo "DEBUG: Environment Variables"
+            echo "USERNAME: '${{ secrets.DOCKERIZEDSERVICEENV_USERNAME }}'"
+            echo "PASSWORD: '${{ secrets.DOCKERIZEDSERVICEENV_PASSWORD }}'"
+            echo "SECRET_MESSAGE: '${{ secrets.DOCKERIZEDSERVICEENV_SECRET_MESSAGE }}'"
+
             echo "Running new container..."
             docker run -d --name my-container -p 3000:3000 \
-              --env USERNAME=${{ secrets.DOCKERIZEDSERVICEENV_USERNAME }} \
-              --env PASSWORD=${{ secrets.DOCKERIZEDSERVICEENV_PASSWORD }} \
-              --env SECRET_MESSAGE=${{ secrets.DOCKERIZEDSERVICEENV_SECRET_MESSAGE }} \
+              --env "USERNAME=${{ secrets.DOCKERIZEDSERVICEENV_USERNAME }}" \
+              --env "PASSWORD=${{ secrets.DOCKERIZEDSERVICEENV_PASSWORD }}" \
+              --env "SECRET_MESSAGE=${{ secrets.DOCKERIZEDSERVICEENV_SECRET_MESSAGE }}" \
               iqbalsha22/dockerized-image:latest
 
             echo "Verifying container status..."
