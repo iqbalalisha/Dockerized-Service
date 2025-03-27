@@ -37,10 +37,7 @@ jobs:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            docker stop my-container || true
-            docker rm my-container || true
-            docker pull iqbalsha22/dockerized-image:latest
+          script:
             docker run -d --name my-container -p 3000:3000 \
               -e USERNAME=${{ secrets.DOCKERIZEDSERVICEENV_USERNAME }} \
               -e PASSWORD=${{ secrets.DOCKERIZEDSERVICEENV_PASSWORD }} \
